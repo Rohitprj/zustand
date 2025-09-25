@@ -12,9 +12,6 @@ export default function LoginPage() {
 
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  // const [loading, setLoading] = useState<boolean>(false);
-  // const [error, setError] = useState<string>("");
-  // const [success, setSuccess] = useState<string>("");
 
   const handleLogin = async () => {
     await login(email, password);
@@ -28,7 +25,6 @@ export default function LoginPage() {
         </h2>
 
         {error && <p className="text-red-600">{error}</p>}
-        {/* {success && <p className="text-green-600">{success}</p>} */}
 
         <form
           onSubmit={(e) => {
