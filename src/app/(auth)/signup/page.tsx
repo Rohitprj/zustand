@@ -3,15 +3,22 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAuthStore } from "@/app/store/authStore";
 
 export default function SignupPage() {
   const router = useRouter();
 
+  const { signup, loading, error } = useAuthStore();
+
+  console.log("Signup page error", loading);
+
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>("");
-  const [success, setSuccess] = useState<string>("");
+
+  const handleSignUp = async () => {
+    await signup(email, password);
+    router.push("/login");
+  };
 
   return (
     <div className="flex items-center justify-center w-full h-screen bg-gray-200">
@@ -23,6 +30,7 @@ export default function SignupPage() {
         <form
           onSubmit={(e) => {
             e.preventDefault();
+            handleSignUp();
           }}
           className="flex flex-col gap-4"
         >
@@ -52,13 +60,16 @@ export default function SignupPage() {
 
           <button
             type="submit"
-            disabled={loading}
+            // disabled={loading}
             className={`flex items-center justify-center gap-2 px-4 py-2 text-white
-            rounded-sm font-semibold transition ${
-              loading ? "bg-gray-600" : "bg-black hover:bg-gray-900"
-            }`}
+            rounded-sm font-semibold transition ${"bg-black hover:bg-gray-900"}`}
+            // className={`flex items-center justify-center gap-2 px-4 py-2 text-white
+            // rounded-sm font-semibold transition ${
+            //   loading ? "bg-gray-600" : "bg-black hover:bg-gray-900"
+            // }`}
           >
-            {loading ? "Creating..." : "Create Account"}
+            Create Account
+            {/* {loading ? "Creating..." : "Create Account"} */}
           </button>
         </form>
 

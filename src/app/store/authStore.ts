@@ -16,7 +16,7 @@ interface authState {
   login: (email: string, password: string) => Promise<void>;
 }
 
-export const authStore = create<authState>()(
+export const useAuthStore = create<authState>()(
   persist(
     (set) => ({
       user: null,
@@ -24,21 +24,40 @@ export const authStore = create<authState>()(
       loading: false,
       error: null,
       signup: async (email, password) => {
+        console.log("Checking error", email, password);
         try {
           set({ loading: true, error: null });
-          const res = axiosInstance.post("auth/signUp", { email, password });
-          //   set({ user: res.user, token: res.accessToken, loading: false });
-        } catch (error) {
-          set({ error: error.message || "Signup failed", loading: false });
+          const res = await axiosInstance.post("/auth/signUp", {
+            email,
+            password,
+          });
+          set({ loading: false });
+        } catch (err: any) {
+          set({
+            error:
+              err.response?.data?.message || err.message || "Signup failed",
+            loading: false,
+          });
         }
       },
       login: async (email, password) => {
         try {
           set({ loading: true, error: null });
-          const res = axiosInstance.post("auth/logIn", { email, password });
-          set({ user: res.user, token: res.accessToken, loading: false });
-        } catch (error) {
-          set({ error: error.message || "login failed", loading: false });
+          const res = await axiosInstance.post("auth/logIn", {
+            email,
+            password,
+          });
+          set({
+            user: res.data.user,
+            token: res.data.accessToken,
+            loading: false,
+          });
+        } catch (err: any) {
+          set({
+            error:
+              err.response?.data?.message || err.message || "Signup failed",
+            loading: false,
+          });
         }
       },
     }),
